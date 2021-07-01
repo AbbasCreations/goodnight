@@ -8,17 +8,121 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
-        canvas {background-color:#312;}
+        .bg-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bg-wrapper .envelope-wrapper .envelope {
+  position: relative;
+  width: 300px;
+  height: 150px;
+}
+.bg-wrapper .envelope-wrapper .envelope:before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  z-index: 2;
+  border-top: 55px solid #D3EAFD;
+  border-right: 75px solid transparent;
+  border-left: 75px solid transparent;
+  transform-origin: top;
+  transition: all 0.5s ease-in-out 0.5s;
+}
+.bg-wrapper .envelope-wrapper .envelope:after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 0px;
+  height: 0px;
+  border-top: 50px solid transparent;
+  border-right: 75px solid #B4D2EE;
+  border-bottom: 50px solid #B4D2EE;
+  border-left: 75px solid #B4D2EE;
+}
+.bg-wrapper .envelope-wrapper .envelope .card {
+  position: absolute;
+  right: 20%;
+  bottom: 0;
+  width: 60%;
+  height: 90%;
+  background: #FFF;
+  text-align: center;
+  transition: all 1s ease-in-out;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.bg-wrapper .envelope-wrapper .envelope .card .close-icon {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+.bg-wrapper .envelope-wrapper .envelope .card .text {
+  display: inline-block;
+  margin-top: 50%;
+  transform: translateY(-50%);
+  font-family: "Great Vibes", cursive;
+  color: #C51803;
+}
+.bg-wrapper .envelope-wrapper .heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  background: #C51803;
+  z-index: 4;
+  transform: translate(-50%, -20%) rotate(45deg);
+  transition: transform 0.5s ease-in-out 0.7s;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+.bg-wrapper .envelope-wrapper .heart:before, .bg-wrapper .envelope-wrapper .heart:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #C51803;
+  border-radius: 50%;
+}
+.bg-wrapper .envelope-wrapper .heart:before {
+  top: -7.5px;
+}
+.bg-wrapper .envelope-wrapper .heart:after {
+  right: 7.5px;
+}
+.bg-wrapper .flap .envelope:before {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+.bg-wrapper .flap .envelope .card {
+  bottom: 100px;
+  transform: scale(1.5);
+  transition-delay: 1s;
+}
+.bg-wrapper .flap .heart {
+  transform: rotate(90deg);
+  transition-delay: 0.4s;
+}
     </style>
     <title>Goodnight Bonito</title>
   </head>
   <body>
  
-    <div>
-        <canvas id="testCanvas" width="100%" height="500"></canvas>
-    </div>
-    <a href="##" target="_blank"><div class="logo white"></div></a>
 
+<div class="bg-wrapper">
+  <div class="envelope-wrapper">
+    <div class="envelope">
+      <div class="card"><span class="fa fa-close close-icon"></span>
+        <div class="text">I love you Fatima<br>Goodnight you beauty.</div>
+      </div>
+    </div>
+    <div class="heart"></div>
+  </div>
+</div>
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -29,97 +133,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
-    <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
     <script>
-        var canvas;
-var stage;
-var container;
-var captureContainers;
-var captureIndex;
 
-function init() {
-  // create a new stage and point it at our canvas:
-  canvas = document.getElementById("testCanvas");
-  stage = new createjs.Stage(canvas);
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+$(".envelope-wrapper .heart").click(function(){
+  $('.envelope-wrapper').addClass('flap')
+});
 
-  var w = canvas.width;
-  var h = canvas.height;
+$(".envelope-wrapper .close-icon").click(function(){
+  $('.envelope-wrapper').removeClass('flap')
+});
 
-  container = new createjs.Container();
-  stage.addChild(container);
 
-  captureContainers = [];
-  captureIndex = 0;
 
-  // create a large number of slightly complex vector shapes, and give them random positions and velocities:
-		for (var i = 0; i < 100; i++) {
-			var heart = new createjs.Shape();
-			heart.graphics.beginFill(createjs.Graphics.getHSL(Math.random() * 30 - 45, 100, 50 + Math.random() * 30));
-			heart.graphics.moveTo(0, -12).curveTo(1, -20, 8, -20).curveTo(16, -20, 16, -10).curveTo(16, 0, 0, 12);
-			heart.graphics.curveTo(-16, 0, -16, -10).curveTo(-16, -20, -8, -20).curveTo(-1, -20, 0, -12);
-			heart.y = -100;
 
-			container.addChild(heart);
-		}
 
-  var text = new createjs.Text("I lOVE YOU more with each\n passing day\nGood Night Bunny ", "bold 24px Arial", "#f6f6f6");
-  text.textAlign = "center";
-  text.x = w / 2;
-  text.y = h / 2 - text.getMeasuredLineHeight();
-  stage.addChild(text);
 
-  for (i = 0; i < 100; i++) {
-    var captureContainer = new createjs.Container();
-    captureContainer.cache(0, 0, w, h);
-    captureContainers.push(captureContainer);
-  }
-
-  // start the tick and point it at the window so we can do some work before updating the stage:
-  createjs.Ticker.timingMode = createjs.Ticker.RAF;
-  createjs.Ticker.on("tick", tick);
-}
-
-function tick(event) {
-  var w = canvas.width;
-  var h = canvas.height;
-  var l = container.numChildren;
-
-  captureIndex = (captureIndex + 1) % captureContainers.length;
-  stage.removeChildAt(0);
-  var captureContainer = captureContainers[captureIndex];
-  stage.addChildAt(captureContainer, 0);
-  captureContainer.addChild(container);
-
-  // iterate through all the children and move them according to their velocity:
-		for (var i = 0; i < l; i++) {
-			var heart = container.getChildAt(i);
-			if (heart.y < -50) {
-				heart._x = Math.random() * w;
-				heart.y = h * (1 + Math.random()) + 50;
-				heart.perX = (1 + Math.random() * 2) * h;
-				heart.offX = Math.random() * h;
-				heart.ampX = heart.perX * 0.1 * (0.15 + Math.random());
-				heart.velY = -Math.random() * 2 - 1;
-				heart.scale = Math.random() * 2 + 1;
-				heart._rotation = Math.random() * 40 - 20;
-				heart.alpha = Math.random() * 0.75 + 0.05;
-				heart.compositeOperation = Math.random() < 0.33 ? "lighter" : "source-over";
-			}
-			var int = (heart.offX + heart.y) / heart.perX * Math.PI * 2;
-			heart.y += heart.velY * heart.scaleX / 2;
-			heart.x = heart._x + Math.cos(int) * heart.ampX;
-			heart.rotation = heart._rotation + Math.sin(int) * 30;
-		}
-
-  captureContainer.updateCache("source-over");
-
-  // draw the updates to stage:
-  stage.update(event);
-}
-
-init();
-    </script>
+	  </script>
   </body>
 </html>
